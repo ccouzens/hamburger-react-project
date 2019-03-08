@@ -17,9 +17,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prettier:base": "prettier --parser typescript --single-quote",
-    "prettier:check": "npm run prettier:base -- --list-different \"src/**/*.{ts,tsx}\"",
-    "prettier:write": "npm run prettier:base -- --write \"src/**/*.{ts,tsx}\""
+    "prettier:base": "prettier --single-quote",
+    "prettier:check": "npm run prettier:base -- --list-different \"{src,public}/**/*.{ts,tsx,css,html,json}\" README.md tsconfig.json",
+    "prettier:write": "npm run prettier:base -- --write \"{src,public}/**/*.{ts,tsx,css,html,json}\" README.md tsconfig.json"
   },
   "eslintConfig": {
     "extends": "react-app"
