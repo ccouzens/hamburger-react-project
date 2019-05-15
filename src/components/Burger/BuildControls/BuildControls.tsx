@@ -12,6 +12,8 @@ const controls: { label: string; type: IngredientType }[] = [
 
 const buildControls = (props: {
   ingredientAdded: (type: IngredientType) => void;
+  ingredientRemoved: (type: IngredientType) => void;
+  disabled: Set<IngredientType>;
 }) => (
   <div className={classes.BuildControls}>
     {controls.map(ctrl => (
@@ -19,6 +21,8 @@ const buildControls = (props: {
         key={ctrl.label}
         label={ctrl.label}
         added={() => props.ingredientAdded(ctrl.type)}
+        removed={() => props.ingredientRemoved(ctrl.type)}
+        disabled={props.disabled.has(ctrl.type)}
       />
     ))}
   </div>
