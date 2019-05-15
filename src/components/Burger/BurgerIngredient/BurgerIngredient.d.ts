@@ -1,8 +1,5 @@
-type IngredientType =
-  | 'bread-bottom'
-  | 'bread-top'
-  | 'meat'
-  | 'cheese'
-  | 'salad'
-  | 'bacon';
-export { IngredientType };
+type IngredientType = 'meat' | 'cheese' | 'salad' | 'bacon';
+
+type IngredientBreadType = 'bread-bottom' | 'bread-top' | IngredientType;
+
+export { IngredientType, IngredientBreadType };

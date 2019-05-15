@@ -1,13 +1,14 @@
 import React from 'react';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
 import classes from './Burger.module.css';
+import { IngredientType } from '../../components/Burger/BurgerIngredient/BurgerIngredient.d';
 
-const burger = (props: { ingredients: { [key: string]: number } }) => {
-  let transformedIngredients = (['salad', 'bacon', 'cheese', 'meat'] as (
-    | 'salad'
-    | 'bacon'
-    | 'cheese'
-    | 'meat')[])
+const ingredients: IngredientType[] = ['salad', 'bacon', 'cheese', 'meat'];
+
+const burger = (props: {
+  ingredients: { [key in IngredientType]: number };
+}) => {
+  let transformedIngredients = ingredients
     .map(igKey => {
       return [...Array(props.ingredients[igKey])].map((_, i) => {
         return <BurgerIngredient key={igKey + i} type={igKey} />;

@@ -1,9 +1,9 @@
 import React from 'react';
 
 import classes from './BurgerIngredient.module.css';
-import { IngredientType } from './BurgerIngredient.d';
+import { IngredientBreadType } from './BurgerIngredient.d';
 
-const burgerIngredient = (props: { type: IngredientType }) => {
+const burgerIngredient = (props: { type: IngredientBreadType }) => {
   let ingredient = null;
 
   switch (props.type) {
