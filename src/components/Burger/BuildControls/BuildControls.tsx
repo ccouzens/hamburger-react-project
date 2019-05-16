@@ -15,6 +15,7 @@ const buildControls = (props: {
   ingredientRemoved: (type: IngredientType) => void;
   disabled: Set<IngredientType>;
   price: number;
+  purchasable: boolean;
 }) => (
   <div className={classes.BuildControls}>
     <p>
@@ -29,7 +30,9 @@ const buildControls = (props: {
         disabled={props.disabled.has(ctrl.type)}
       />
     ))}
-    <button className={classes.OrderButton}>order now</button>
+    <button className={classes.OrderButton} disabled={!props.purchasable}>
+      order now
+    </button>
   </div>
 );
 
