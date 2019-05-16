@@ -7,11 +7,13 @@ import {
 } from '../../components/Burger/BurgerIngredient/BurgerIngredient.d';
 
 const burger = (props: { ingredients: Map<IngredientType, number> }) => {
-  let transformedIngredients = INGREDIENT_TYPES.map(ingredient => {
-    return [...Array(props.ingredients.get(ingredient) || 0)].map((_, i) => {
-      return <BurgerIngredient key={ingredient + i} type={ingredient} />;
-    });
-  }).reduce((arr, el) => [...arr, ...el], []);
+  let transformedIngredients = [...props.ingredients]
+    .map(([ingredient, quantity]) =>
+      [...Array(quantity)].map((_, i) => (
+        <BurgerIngredient key={ingredient + i} type={ingredient} />
+      ))
+    )
+    .reduce((arr, el) => [...arr, ...el], []);
   if (transformedIngredients.length === 0) {
     transformedIngredients = [<p>Please Start Adding ingredients!</p>];
   }
