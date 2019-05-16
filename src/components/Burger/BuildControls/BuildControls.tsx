@@ -14,8 +14,12 @@ const buildControls = (props: {
   ingredientAdded: (type: IngredientType) => void;
   ingredientRemoved: (type: IngredientType) => void;
   disabled: Set<IngredientType>;
+  price: number;
 }) => (
   <div className={classes.BuildControls}>
+    <p>
+      Current Price: <strong>{props.price.toFixed(2)}</strong>
+    </p>
     {controls.map(ctrl => (
       <BuildControl
         key={ctrl.label}
