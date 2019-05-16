@@ -29,6 +29,7 @@ const buildControls = (props: {
         disabled={props.disabled.has(ctrl.type)}
       />
     ))}
+    <button className={classes.OrderButton}>order now</button>
   </div>
 );
 
