@@ -6,6 +6,8 @@ import {
   IngredientType,
   INGREDIENT_TYPES
 } from '../../components/Burger/BurgerIngredient/BurgerIngredient.d';
+import Modal from '../../components/UI/Modal/Modal';
+import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
 
 const INGREDIENT_PRICES: { [key in IngredientType]: number } = {
   salad: 0.5,
@@ -67,6 +69,9 @@ class BurgerBuilder extends Component {
 
     return (
       <>
+        <Modal>
+          <OrderSummary ingredients={this.state.ingredients} />
+        </Modal>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls
           ingredientAdded={this.addIngredientHandler}
