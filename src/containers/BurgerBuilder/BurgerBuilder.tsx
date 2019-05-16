@@ -16,25 +16,18 @@ const INGREDIENT_PRICES: { [key in IngredientType]: number } = {
 
 class BurgerBuilder extends Component {
   state: {
-    ingredients: { [key in IngredientType]: number };
+    ingredients: Map<IngredientType, number>;
     totalPrice: number;
   } = {
-    ingredients: {
-      salad: 0,
-      bacon: 0,
-      cheese: 0,
-      meat: 0
-    },
+    ingredients: new Map(),
     totalPrice: 4
   };
 
   addIngredientHandler = (type: IngredientType) => {
-    const oldCount = this.state.ingredients[type];
+    const oldCount = this.state.ingredients.get(type) || 0;
     const updatedCount = oldCount + 1;
-    const updatedIngredients = {
-      ...this.state.ingredients
-    };
-    updatedIngredients[type] = updatedCount;
+    const updatedIngredients = new Map(this.state.ingredients);
+    updatedIngredients.set(type, updatedCount);
     const priceAddition = INGREDIENT_PRICES[type];
     const oldPrice = this.state.totalPrice;
     const newPrice = oldPrice + priceAddition;
@@ -42,15 +35,13 @@ class BurgerBuilder extends Component {
   };
 
   removeIngredientHandler = (type: IngredientType) => {
-    const oldCount = this.state.ingredients[type];
+    const oldCount = this.state.ingredients.get(type) || 0;
     if (oldCount <= 0) {
       return;
     }
     const updatedCount = oldCount - 1;
-    const updatedIngredients = {
-      ...this.state.ingredients
-    };
-    updatedIngredients[type] = updatedCount;
+    const updatedIngredients = new Map(this.state.ingredients);
+    updatedIngredients.set(type, updatedCount);
     const priceDeduction = INGREDIENT_PRICES[type];
     const oldPrice = this.state.totalPrice;
     const newPrice = oldPrice - priceDeduction;
@@ -59,7 +50,9 @@ class BurgerBuilder extends Component {
 
   render() {
     const disabledInfo = new Set([
-      ...INGREDIENT_TYPES.filter(type => this.state.ingredients[type] == 0)
+      ...INGREDIENT_TYPES.filter(
+        type => (this.state.ingredients.get(type) || 0) == 0
+      )
     ]);
 
     return (
