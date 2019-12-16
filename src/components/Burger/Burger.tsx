@@ -14,13 +14,14 @@ const burger = (props: { ingredients: Map<IngredientType, number> }) => {
       ))
     )
     .reduce((arr, el) => [...arr, ...el], []);
-  if (transformedIngredients.length === 0) {
-    transformedIngredients = [<p>Please Start Adding ingredients!</p>];
-  }
   return (
     <div className={classes.Burger}>
       <BurgerIngredient type="bread-top" />
-      {transformedIngredients}
+      {transformedIngredients.length === 0 ? (
+        <p>Please Start Adding ingredients!</p>
+      ) : (
+        transformedIngredients
+      )}
       <BurgerIngredient type="bread-bottom" />
     </div>
   );
