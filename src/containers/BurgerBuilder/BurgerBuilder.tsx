@@ -21,10 +21,12 @@ class BurgerBuilder extends Component {
     ingredients: Map<IngredientType, number>;
     totalPrice: number;
     purchasable: boolean;
+    purchasing: boolean;
   } = {
     ingredients: new Map(),
     totalPrice: 4,
-    purchasable: false
+    purchasable: false,
+    purchasing: false
   };
 
   updatePurchaseState(ingredients: Map<IngredientType, number>) {
@@ -60,6 +62,10 @@ class BurgerBuilder extends Component {
     this.updatePurchaseState(updatedIngredients);
   };
 
+  purchaseHandler = () => {
+    this.setState({ purchasing: true });
+  };
+
   render() {
     const disabledInfo = new Set([
       ...INGREDIENT_TYPES.filter(
@@ -69,11 +75,12 @@ class BurgerBuilder extends Component {
 
     return (
       <>
-        <Modal>
+        <Modal show={this.state.purchasing}>
           <OrderSummary ingredients={this.state.ingredients} />
         </Modal>
         <Burger ingredients={this.state.ingredients} />
         <BuildControls
+          ordered={this.purchaseHandler}
           ingredientAdded={this.addIngredientHandler}
           ingredientRemoved={this.removeIngredientHandler}
           disabled={disabledInfo}
