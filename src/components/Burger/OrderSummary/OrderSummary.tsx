@@ -1,7 +1,12 @@
 import React from 'react';
 import { IngredientType } from '../../Burger/BurgerIngredient/BurgerIngredient.d';
+import Button from '../../UI/Button/Button';
 
-const orderSummary = (props: { ingredients: Map<IngredientType, number> }) => {
+const orderSummary = (props: {
+  ingredients: Map<IngredientType, number>;
+  purchaseCancelled: () => void;
+  purchaseContinued: () => void;
+}) => {
   const ingredientSummary = [...props.ingredients].map(
     ([ingredient, amount]) => (
       <li key={ingredient}>
@@ -16,6 +21,12 @@ const orderSummary = (props: { ingredients: Map<IngredientType, number> }) => {
       <p>A delicious burger with the following ingredients:</p>
       <ul>{ingredientSummary}</ul>
       <p>Continue to Checkout?</p>
+      <Button btnType="Danger" clicked={props.purchaseCancelled}>
+        CANCEL
+      </Button>
+      <Button btnType="Success" clicked={props.purchaseContinued}>
+        CONTINUE
+      </Button>
     </>
   );
 };
