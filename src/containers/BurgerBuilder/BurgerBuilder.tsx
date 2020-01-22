@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -18,46 +18,46 @@ const INGREDIENT_PRICES: { [key in IngredientType]: number } = {
 
 type IngredientCounts = Map<IngredientType, number>;
 
-const burgerBuilder = () => {
-  const [ingredients, setIngredients] = useState<IngredientCounts>(new Map());
-  const [totalPrice, setTotalPrice] = useState(4);
-  const [purchasable, setPurchasable] = useState(false);
-  const [purchasing, setPurchasing] = useState(false);
+const calculatePrice = (ingredients: IngredientCounts) =>
+  [...ingredients].reduce(
+    (sum, [ingredient, amount]) => sum + INGREDIENT_PRICES[ingredient] * amount,
+    4
+  );
 
-  const disabledInfo = new Set([
+const calculatePurchasable = (ingredients: IngredientCounts) =>
+  [...ingredients.values()].some(amount => amount > 0);
+
+const calculateDisabledInfo = (ingredients: IngredientCounts) =>
+  new Set([
     ...INGREDIENT_TYPES.filter(type => (ingredients.get(type) || 0) == 0)
   ]);
 
-  const updatePurchaseState = (ingredients: Map<IngredientType, number>) =>
-    setPurchasable([...ingredients.values()].some(amount => amount > 0));
+const burgerBuilder = () => {
+  const [ingredients, setIngredients] = useState<IngredientCounts>(new Map());
+  const [purchasing, setPurchasing] = useState(false);
+
+  const totalPrice = useMemo(() => calculatePrice(ingredients), [ingredients]);
+  const purchasable = useMemo(() => calculatePurchasable(ingredients), [
+    ingredients
+  ]);
+  const disabledInfo = useMemo(() => calculateDisabledInfo(ingredients), [
+    ingredients
+  ]);
 
   const addIngredientHandler = (type: IngredientType) => {
     const oldCount = ingredients.get(type) || 0;
     const updatedCount = oldCount + 1;
     const updatedIngredients = new Map(ingredients);
     updatedIngredients.set(type, updatedCount);
-    const priceAddition = INGREDIENT_PRICES[type];
-    const oldPrice = totalPrice;
-    const newPrice = oldPrice + priceAddition;
-    setTotalPrice(newPrice);
     setIngredients(updatedIngredients);
-    updatePurchaseState(updatedIngredients);
   };
 
   const removeIngredientHandler = (type: IngredientType) => {
     const oldCount = ingredients.get(type) || 0;
-    if (oldCount <= 0) {
-      return;
-    }
-    const updatedCount = oldCount - 1;
+    const updatedCount = Math.max(oldCount - 1, 0);
     const updatedIngredients = new Map(ingredients);
     updatedIngredients.set(type, updatedCount);
-    const priceDeduction = INGREDIENT_PRICES[type];
-    const oldPrice = totalPrice;
-    const newPrice = oldPrice - priceDeduction;
-    setTotalPrice(newPrice);
     setIngredients(updatedIngredients);
-    updatePurchaseState(updatedIngredients);
   };
 
   return (
