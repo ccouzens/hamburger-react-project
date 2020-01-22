@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -16,96 +16,71 @@ const INGREDIENT_PRICES: { [key in IngredientType]: number } = {
   bacon: 0.7
 };
 
-class BurgerBuilder extends Component {
-  state: {
-    ingredients: Map<IngredientType, number>;
-    totalPrice: number;
-    purchasable: boolean;
-    purchasing: boolean;
-  } = {
-    ingredients: new Map(),
-    totalPrice: 4,
-    purchasable: false,
-    purchasing: false
-  };
+type IngredientCounts = Map<IngredientType, number>;
 
-  updatePurchaseState(ingredients: Map<IngredientType, number>) {
-    this.setState({
-      purchasable: [...ingredients.values()].some(amount => amount > 0)
-    });
-  }
+const burgerBuilder = () => {
+  const [ingredients, setIngredients] = useState<IngredientCounts>(new Map());
+  const [totalPrice, setTotalPrice] = useState(4);
+  const [purchasable, setPurchasable] = useState(false);
+  const [purchasing, setPurchasing] = useState(false);
 
-  addIngredientHandler = (type: IngredientType) => {
-    const oldCount = this.state.ingredients.get(type) || 0;
+  const disabledInfo = new Set([
+    ...INGREDIENT_TYPES.filter(type => (ingredients.get(type) || 0) == 0)
+  ]);
+
+  const updatePurchaseState = (ingredients: Map<IngredientType, number>) =>
+    setPurchasable([...ingredients.values()].some(amount => amount > 0));
+
+  const addIngredientHandler = (type: IngredientType) => {
+    const oldCount = ingredients.get(type) || 0;
     const updatedCount = oldCount + 1;
-    const updatedIngredients = new Map(this.state.ingredients);
+    const updatedIngredients = new Map(ingredients);
     updatedIngredients.set(type, updatedCount);
     const priceAddition = INGREDIENT_PRICES[type];
-    const oldPrice = this.state.totalPrice;
+    const oldPrice = totalPrice;
     const newPrice = oldPrice + priceAddition;
-    this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
-    this.updatePurchaseState(updatedIngredients);
+    setTotalPrice(newPrice);
+    setIngredients(updatedIngredients);
+    updatePurchaseState(updatedIngredients);
   };
 
-  removeIngredientHandler = (type: IngredientType) => {
-    const oldCount = this.state.ingredients.get(type) || 0;
+  const removeIngredientHandler = (type: IngredientType) => {
+    const oldCount = ingredients.get(type) || 0;
     if (oldCount <= 0) {
       return;
     }
     const updatedCount = oldCount - 1;
-    const updatedIngredients = new Map(this.state.ingredients);
+    const updatedIngredients = new Map(ingredients);
     updatedIngredients.set(type, updatedCount);
     const priceDeduction = INGREDIENT_PRICES[type];
-    const oldPrice = this.state.totalPrice;
+    const oldPrice = totalPrice;
     const newPrice = oldPrice - priceDeduction;
-    this.setState({ totalPrice: newPrice, ingredients: updatedIngredients });
-    this.updatePurchaseState(updatedIngredients);
+    setTotalPrice(newPrice);
+    setIngredients(updatedIngredients);
+    updatePurchaseState(updatedIngredients);
   };
 
-  purchaseHandler = () => {
-    this.setState({ purchasing: true });
-  };
-
-  purchaseCancelHandler = () => {
-    this.setState({ purchasing: false });
-  };
-
-  purchaseContinueHandler = () => {
-    alert('You continue!');
-  };
-
-  render() {
-    const disabledInfo = new Set([
-      ...INGREDIENT_TYPES.filter(
-        type => (this.state.ingredients.get(type) || 0) == 0
-      )
-    ]);
-
-    return (
-      <>
-        <Modal
-          show={this.state.purchasing}
-          modalClosed={this.purchaseCancelHandler}
-        >
-          <OrderSummary
-            ingredients={this.state.ingredients}
-            price={this.state.totalPrice}
-            purchaseCancelled={this.purchaseCancelHandler}
-            purchaseContinued={this.purchaseContinueHandler}
-          />
-        </Modal>
-        <Burger ingredients={this.state.ingredients} />
-        <BuildControls
-          ordered={this.purchaseHandler}
-          ingredientAdded={this.addIngredientHandler}
-          ingredientRemoved={this.removeIngredientHandler}
-          disabled={disabledInfo}
-          price={this.state.totalPrice}
-          purchasable={this.state.purchasable}
+  return (
+    <>
+      <Modal show={purchasing} modalClosed={() => setPurchasing(false)}>
+        <OrderSummary
+          ingredients={ingredients}
+          price={totalPrice}
+          purchaseCancelled={() => setPurchasing(false)}
+          purchaseContinued={() => alert('You continue!')}
         />
-      </>
-    );
-  }
-}
+      </Modal>
+      <Burger ingredients={ingredients} />
+      <BuildControls
+        ordered={() => setPurchasing(true)}
+        ingredientAdded={addIngredientHandler}
+        ingredientRemoved={removeIngredientHandler}
+        disabled={disabledInfo}
+        price={totalPrice}
+        purchasable={purchasable}
+      />
+    </>
+  );
+};
 
-export default BurgerBuilder;
+export default burgerBuilder;
