@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import axiosInstance from "../../axios";
 
 import "./FullPost.css";
 
 const deletePostHandler = (id: number) => {
-  axios
+  axiosInstance
     .delete(`/posts/${id}`)
     .then(console.log)
     .catch(console.error);
@@ -20,7 +21,7 @@ const FullPost = (props: { id: number | undefined }) => {
       return;
     }
     const canceller = axios.CancelToken.source();
-    axios
+    axiosInstance
       .get<{ body: string; title: string; id: number }>(`/posts/${props.id}`, {
         cancelToken: canceller.token
       })

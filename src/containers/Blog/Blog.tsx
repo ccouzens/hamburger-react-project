@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import axiosInstance from "../../axios";
 
 import Post from "../../components/Post/Post";
 import FullPost from "../../components/FullPost/FullPost";
@@ -19,7 +20,7 @@ const Blog = (props: {}) => {
 
   useEffect(() => {
     const canceller = axios.CancelToken.source();
-    axios
+    axiosInstance
       .get<{ id: number; title: string }[]>("/posts", {
         cancelToken: canceller.token
       })
