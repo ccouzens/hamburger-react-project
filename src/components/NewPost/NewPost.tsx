@@ -16,7 +16,7 @@ const NewPost = (props: {}) => {
       author: author
     };
     axios
-      .post("https://jsonplaceholder.typicode.com/posts", post)
+      .post("/posts", post)
       .then(console.log)
       .catch(console.error);
   };

@@ -5,7 +5,7 @@ import "./FullPost.css";
 
 const deletePostHandler = (id: number) => {
   axios
-    .delete(`https://jsonplaceholder.typicode.com/posts/${id}`)
+    .delete(`/posts/${id}`)
     .then(console.log)
     .catch(console.error);
 };
@@ -21,12 +21,9 @@ const FullPost = (props: { id: number | undefined }) => {
     }
     const canceller = axios.CancelToken.source();
     axios
-      .get<{ body: string; title: string; id: number }>(
-        `https://jsonplaceholder.typicode.com/posts/${props.id}`,
-        {
-          cancelToken: canceller.token
-        }
-      )
+      .get<{ body: string; title: string; id: number }>(`/posts/${props.id}`, {
+        cancelToken: canceller.token
+      })
       .then(r => setPost(r.data))
       .catch(console.error);
     return function cleanup() {

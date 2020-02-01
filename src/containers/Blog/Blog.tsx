@@ -20,12 +20,9 @@ const Blog = (props: {}) => {
   useEffect(() => {
     const canceller = axios.CancelToken.source();
     axios
-      .get<{ id: number; title: string }[]>(
-        "https://jsonplaceholder.typicode.com/posts",
-        {
-          cancelToken: canceller.token
-        }
-      )
+      .get<{ id: number; title: string }[]>("/posts", {
+        cancelToken: canceller.token
+      })
       .then(r => {
         const posts = r.data
           .slice(0, 4)
