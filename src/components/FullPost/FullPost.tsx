@@ -3,17 +3,25 @@ import axios from "axios";
 
 import "./FullPost.css";
 
+const deletePostHandler = (id: number) => {
+  axios
+    .delete(`https://jsonplaceholder.typicode.com/posts/${id}`)
+    .then(console.log)
+    .catch(console.error);
+};
+
 const FullPost = (props: { id: number | undefined }) => {
   const [post, setPost] = useState<
-    undefined | { title: string; body: string }
+    undefined | { title: string; body: string; id: number }
   >();
+
   useEffect(() => {
     if (props.id === undefined) {
       return;
     }
     const canceller = axios.CancelToken.source();
     axios
-      .get<{ body: string; title: string }>(
+      .get<{ body: string; title: string; id: number }>(
         `https://jsonplaceholder.typicode.com/posts/${props.id}`,
         {
           cancelToken: canceller.token
@@ -37,7 +45,9 @@ const FullPost = (props: { id: number | undefined }) => {
       <h1>{post.title}</h1>
       <p>{post.body}</p>
       <div className="Edit">
-        <button className="Delete">Delete</button>
+        <button className="Delete" onClick={() => deletePostHandler(post.id)}>
+          Delete
+        </button>
       </div>
     </div>
   );
