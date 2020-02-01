@@ -14,6 +14,7 @@ interface Post {
 
 const Blog = (props: {}) => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [errored, setErrored] = useState(false);
   const [selectedPostId, setSelectedPostId] = useState<number | undefined>();
 
   useEffect(() => {
@@ -31,7 +32,10 @@ const Blog = (props: {}) => {
           .map(post => ({ ...post, author: "Max" }));
         setPosts(posts);
       })
-      .catch(console.error);
+      .catch(err => {
+        setErrored(true);
+        console.error(err);
+      });
     return function cleanup() {
       canceller.cancel("cancel loading posts");
     };
@@ -39,14 +43,18 @@ const Blog = (props: {}) => {
   return (
     <div>
       <section className="Posts">
-        {posts.map(post => (
-          <Post
-            key={post.id}
-            title={post.title}
-            author={post.author}
-            clicked={() => setSelectedPostId(post.id)}
-          />
-        ))}
+        {errored ? (
+          <p style={{ textAlign: "center" }}>Something went wrong!</p>
+        ) : (
+          posts.map(post => (
+            <Post
+              key={post.id}
+              title={post.title}
+              author={post.author}
+              clicked={() => setSelectedPostId(post.id)}
+            />
+          ))
+        )}
       </section>
       <section>
         <FullPost id={selectedPostId} />
