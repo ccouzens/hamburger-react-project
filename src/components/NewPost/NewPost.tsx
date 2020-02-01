@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, FormEvent } from "react";
+import axios from "axios";
 
 import "./NewPost.css";
 
@@ -7,8 +8,21 @@ const NewPost = (props: {}) => {
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("Max");
 
+  const postDataHandler = (event: FormEvent) => {
+    event.preventDefault();
+    const post = {
+      title: title,
+      body: content,
+      author: author
+    };
+    axios
+      .post("https://jsonplaceholder.typicode.com/posts", post)
+      .then(console.log)
+      .catch(console.error);
+  };
+
   return (
-    <div className="NewPost">
+    <form className="NewPost" onSubmit={postDataHandler}>
       <h1>Add a Post</h1>
       <label>Title</label>
       <input
@@ -27,8 +41,8 @@ const NewPost = (props: {}) => {
         <option value="Max">Max</option>
         <option value="Manu">Manu</option>
       </select>
-      <button>Add Post</button>
-    </div>
+      <input type="submit" value="Add Post" />
+    </form>
   );
 };
 

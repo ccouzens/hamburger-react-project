@@ -13,7 +13,7 @@
   font-weight: bold;
 }
 
-.NewPost input,
+.NewPost input[type="text"],
 .NewPost textarea,
 .NewPost select {
   display: block;
@@ -25,7 +25,7 @@
   margin: auto;
 }
 
-.NewPost button {
+.NewPost input[type="submit"] {
   margin: 5px 0;
   padding: 10px;
   font: inherit;
@@ -35,8 +35,8 @@
   cursor: pointer;
 }
 
-.NewPost button:hover,
-.NewPost button:active {
+.NewPost input[type="submit"]:hover,
+.NewPost input[type="submit"]:active {
   color: white;
   background-color: #fa923f;
 }
