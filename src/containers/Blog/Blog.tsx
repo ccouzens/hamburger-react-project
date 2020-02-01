@@ -30,9 +30,10 @@ const Blog = (props: {}) => {
           .slice(0, 4)
           .map(post => ({ ...post, author: "Max" }));
         setPosts(posts);
-      });
+      })
+      .catch(console.error);
     return function cleanup() {
-      canceller.cancel();
+      canceller.cancel("cancel loading posts");
     };
   }, []);
   return (
