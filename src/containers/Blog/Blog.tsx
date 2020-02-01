@@ -14,6 +14,7 @@ interface Post {
 
 const Blog = (props: {}) => {
   const [posts, setPosts] = useState<Post[]>([]);
+  const [selectedPostId, setSelectedPostId] = useState<number | undefined>();
 
   useEffect(() => {
     const canceller = axios.CancelToken.source();
@@ -33,16 +34,21 @@ const Blog = (props: {}) => {
     return function cleanup() {
       canceller.cancel();
     };
-  });
+  }, []);
   return (
     <div>
       <section className="Posts">
         {posts.map(post => (
-          <Post key={post.id} title={post.title} author={post.author} />
+          <Post
+            key={post.id}
+            title={post.title}
+            author={post.author}
+            clicked={() => setSelectedPostId(post.id)}
+          />
         ))}
       </section>
       <section>
-        <FullPost />
+        <FullPost id={selectedPostId} />
       </section>
       <section>
         <NewPost />

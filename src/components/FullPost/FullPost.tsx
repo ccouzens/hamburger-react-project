@@ -2,9 +2,10 @@ import React from "react";
 
 import "./FullPost.css";
 
-const FullPost = (props: {}) => {
-  let post = <p>Please select a Post!</p>;
-  post = (
+const FullPost = (props: { id: number | undefined }) =>
+  props.id === undefined ? (
+    <p style={{ textAlign: "center" }}>Please select a Post!</p>
+  ) : (
     <div className="FullPost">
       <h1>Title</h1>
       <p>Content</p>
@@ -13,7 +14,5 @@ const FullPost = (props: {}) => {
       </div>
     </div>
   );
-  return post;
-};
 
 export default FullPost;
