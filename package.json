@@ -12,7 +12,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
-    "prettier": "prettier --write '**/*.tsx' '**/*.ts' '**/*.json' '**/*.md'"
+    "prettier": "prettier --write '**/*.tsx' '**/*.ts' '**/*.json' '**/*.md' '**/*.css'"
   },
   "devDependencies": {
     "@types/jest": "^25.1.1",
