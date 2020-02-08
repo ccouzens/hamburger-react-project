@@ -1,4 +1,4 @@
-import React, { useState, useMemo, FunctionComponent, useEffect } from 'react';
+import React, { useState, useMemo, FunctionComponent } from 'react';
 
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -21,49 +21,28 @@ const INGREDIENT_PRICES: { [key in IngredientType]: number } = {
 
 type IngredientCounts = Map<IngredientType, number>;
 
-const calculatePrice = (ingredients: IngredientCounts | null) =>
-  ingredients === null
-    ? 0
-    : [...ingredients].reduce(
-        (sum, [ingredient, amount]) =>
-          sum + INGREDIENT_PRICES[ingredient] * amount,
-        4
-      );
+const calculatePrice = (ingredients: IngredientCounts) =>
+  [...ingredients].reduce(
+    (sum, [ingredient, amount]) => sum + INGREDIENT_PRICES[ingredient] * amount,
+    4
+  );
 
-const calculatePurchasable = (ingredients: IngredientCounts | null) =>
-  ingredients === null
-    ? false
-    : [...ingredients.values()].some(amount => amount > 0);
+const calculatePurchasable = (ingredients: IngredientCounts) =>
+  [...ingredients.values()].some(amount => amount > 0);
 
-const calculateDisabledInfo = (ingredients: IngredientCounts | null) =>
-  ingredients === null
-    ? new Set<IngredientType>()
-    : new Set([
-        ...INGREDIENT_TYPES.filter(type => (ingredients.get(type) || 0) === 0)
-      ]);
+const calculateDisabledInfo = (ingredients: IngredientCounts) =>
+  new Set([
+    ...INGREDIENT_TYPES.filter(type => (ingredients.get(type) || 0) === 0)
+  ]);
 
-const BurgerBuilder: FunctionComponent<{}> = () => {
-  const [ingredients, setIngredients] = useState<IngredientCounts | null>(null);
+const BurgerBuilder: FunctionComponent<{
+  initialIngredients: IngredientCounts;
+}> = props => {
+  const [ingredients, setIngredients] = useState<IngredientCounts>(
+    new Map(props.initialIngredients)
+  );
   const [purchasing, setPurchasing] = useState(false);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    (async () => {
-      try {
-        const r = (
-          await axios.get<{
-            meat?: number;
-            bacon?: number;
-            cheese?: number;
-            salad?: number;
-          }>('/ingredients.json')
-        ).data;
-        setIngredients(new Map(INGREDIENT_TYPES.map(i => [i, r[i] || 0])));
-      } catch (_err) {
-        setIngredients(new Map(INGREDIENT_TYPES.map(i => [i, 0])));
-      }
-    })();
-  }, []);
 
   const totalPrice = useMemo(() => calculatePrice(ingredients), [ingredients]);
   const purchasable = useMemo(() => calculatePurchasable(ingredients), [
@@ -74,9 +53,6 @@ const BurgerBuilder: FunctionComponent<{}> = () => {
   ]);
 
   const addIngredientHandler = (type: IngredientType) => {
-    if (ingredients === null) {
-      return;
-    }
     const oldCount = ingredients.get(type) || 0;
     const updatedCount = oldCount + 1;
     const updatedIngredients = new Map(ingredients);
@@ -85,9 +61,6 @@ const BurgerBuilder: FunctionComponent<{}> = () => {
   };
 
   const removeIngredientHandler = (type: IngredientType) => {
-    if (ingredients === null) {
-      return;
-    }
     const oldCount = ingredients.get(type) || 0;
     const updatedCount = Math.max(oldCount - 1, 0);
     const updatedIngredients = new Map(ingredients);
@@ -96,10 +69,6 @@ const BurgerBuilder: FunctionComponent<{}> = () => {
   };
 
   const purchaseContinueHandler = async () => {
-    if (ingredients === null) {
-      return;
-    }
-
     setLoading(true);
     const order = {
       ingredients: {
@@ -134,7 +103,7 @@ const BurgerBuilder: FunctionComponent<{}> = () => {
       <Modal show={purchasing} modalClosed={() => setPurchasing(false)}>
         {loading ? (
           <Spinner />
-        ) : ingredients === null ? null : (
+        ) : (
           <OrderSummary
             ingredients={ingredients}
             price={totalPrice}
@@ -143,21 +112,15 @@ const BurgerBuilder: FunctionComponent<{}> = () => {
           />
         )}
       </Modal>
-      {ingredients !== null ? (
-        <>
-          <Burger ingredients={ingredients} />
-          <BuildControls
-            ordered={() => setPurchasing(true)}
-            ingredientAdded={addIngredientHandler}
-            ingredientRemoved={removeIngredientHandler}
-            disabled={disabledInfo}
-            price={totalPrice}
-            purchasable={purchasable}
-          />{' '}
-        </>
-      ) : (
-        <Spinner />
-      )}
+      <Burger ingredients={ingredients} />
+      <BuildControls
+        ordered={() => setPurchasing(true)}
+        ingredientAdded={addIngredientHandler}
+        ingredientRemoved={removeIngredientHandler}
+        disabled={disabledInfo}
+        price={totalPrice}
+        purchasable={purchasable}
+      />
     </>
   );
 };
