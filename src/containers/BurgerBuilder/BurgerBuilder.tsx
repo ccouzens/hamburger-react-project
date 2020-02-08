@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, FunctionComponent } from 'react';
 
 import Burger from '../../components/Burger/Burger';
 import BuildControls from '../../components/Burger/BuildControls/BuildControls';
@@ -8,6 +8,8 @@ import {
 } from '../../components/Burger/BurgerIngredient/BurgerIngredient.d';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+import Spinner from '../../components/UI/Spinner/Spinner';
+import withErrorHandler from '../../components/withErrorHandler/withErrorHandler';
 import axios from '../../axios-orders';
 
 const INGREDIENT_PRICES: { [key in IngredientType]: number } = {
@@ -33,9 +35,10 @@ const calculateDisabledInfo = (ingredients: IngredientCounts) =>
     ...INGREDIENT_TYPES.filter(type => (ingredients.get(type) || 0) === 0)
   ]);
 
-const BurgerBuilder = () => {
+const BurgerBuilder: FunctionComponent<{}> = () => {
   const [ingredients, setIngredients] = useState<IngredientCounts>(new Map());
   const [purchasing, setPurchasing] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const totalPrice = useMemo(() => calculatePrice(ingredients), [ingredients]);
   const purchasable = useMemo(() => calculatePurchasable(ingredients), [
@@ -62,6 +65,7 @@ const BurgerBuilder = () => {
   };
 
   const purchaseContinueHandler = async () => {
+    setLoading(true);
     const order = {
       ingredients: {
         meat: ingredients.get('meat') || 0,
@@ -83,21 +87,26 @@ const BurgerBuilder = () => {
     };
 
     try {
-      const response = await axios.post('/orders.json', order);
-      console.log(response);
+      await axios.post('/orders.json', order);
     } catch (e) {
-      console.log(e);
+    } finally {
+      setLoading(false);
+      setPurchasing(false);
     }
   };
   return (
     <>
       <Modal show={purchasing} modalClosed={() => setPurchasing(false)}>
-        <OrderSummary
-          ingredients={ingredients}
-          price={totalPrice}
-          purchaseCancelled={() => setPurchasing(false)}
-          purchaseContinued={purchaseContinueHandler}
-        />
+        {loading ? (
+          <Spinner />
+        ) : (
+          <OrderSummary
+            ingredients={ingredients}
+            price={totalPrice}
+            purchaseCancelled={() => setPurchasing(false)}
+            purchaseContinued={purchaseContinueHandler}
+          />
+        )}
       </Modal>
       <Burger ingredients={ingredients} />
       <BuildControls
@@ -112,4 +121,4 @@ const BurgerBuilder = () => {
   );
 };
 
-export default BurgerBuilder;
+export default withErrorHandler(BurgerBuilder, axios);
