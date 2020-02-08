@@ -3,7 +3,6 @@ import {
   FunctionComponent,
   createElement,
   Fragment,
-  useEffect,
   useState
 } from 'react';
 import Modal from '../UI/Modal/Modal';
@@ -14,18 +13,16 @@ const withErrorHandler = <P>(
   axios: AxiosInstance
 ) => (props: P) => {
   const [error, setError] = useState<null | string>(null);
-  useEffect(() => {
-    axios.interceptors.request.use(r => {
-      setError(null);
-      return r;
-    });
-    axios.interceptors.response.use(
-      r => r,
-      err => {
-        setError(`${err}`);
-      }
-    );
+  axios.interceptors.request.use(r => {
+    setError(null);
+    return r;
   });
+  axios.interceptors.response.use(
+    r => r,
+    err => {
+      setError(`${err}`);
+    }
+  );
   return createElement(
     Fragment,
     null,
