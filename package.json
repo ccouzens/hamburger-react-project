@@ -7,6 +7,7 @@
     "@types/node": "^11.15.5",
     "@types/react": "^16.9.19",
     "@types/react-dom": "^16.9.5",
+    "axios": "^0.19.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",
     "react-scripts": "^3.3.1",
@@ -17,9 +18,9 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "prettier:base": "prettier --single-quote",
-    "prettier:check": "npm run prettier:base -- --list-different \"{src,public}/**/*.{ts,tsx,css,html,json}\" README.md tsconfig.json",
-    "prettier:write": "npm run prettier:base -- --write \"{src,public}/**/*.{ts,tsx,css,html,json}\" README.md tsconfig.json"
+    "prettier:base": "prettier --single-quote '{src,public}/**/*.{ts,tsx,css,html,json}' README.md tsconfig.json",
+    "prettier:check": "npm run prettier:base -- --list-different",
+    "prettier:write": "npm run prettier:base -- --write"
   },
   "eslintConfig": {
     "extends": "react-app"

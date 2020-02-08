@@ -8,6 +8,7 @@ import {
 } from '../../components/Burger/BurgerIngredient/BurgerIngredient.d';
 import Modal from '../../components/UI/Modal/Modal';
 import OrderSummary from '../../components/Burger/OrderSummary/OrderSummary';
+import axios from '../../axios-orders';
 
 const INGREDIENT_PRICES: { [key in IngredientType]: number } = {
   salad: 0.5,
@@ -60,6 +61,34 @@ const BurgerBuilder = () => {
     setIngredients(updatedIngredients);
   };
 
+  const purchaseContinueHandler = async () => {
+    const order = {
+      ingredients: {
+        meat: ingredients.get('meat') || 0,
+        cheese: ingredients.get('cheese') || 0,
+        salad: ingredients.get('salad') || 0,
+        bacon: ingredients.get('bacon') || 0
+      },
+      price: totalPrice,
+      customer: {
+        name: 'Max Schwarzmüller',
+        address: {
+          street: 'Teststreet 1',
+          zipCode: '41351',
+          country: 'Germany'
+        },
+        email: 'test@test.com'
+      },
+      deliveryMethod: 'fastest'
+    };
+
+    try {
+      const response = await axios.post('/orders.json', order);
+      console.log(response);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <>
       <Modal show={purchasing} modalClosed={() => setPurchasing(false)}>
@@ -67,7 +96,7 @@ const BurgerBuilder = () => {
           ingredients={ingredients}
           price={totalPrice}
           purchaseCancelled={() => setPurchasing(false)}
-          purchaseContinued={() => alert('You continue!')}
+          purchaseContinued={purchaseContinueHandler}
         />
       </Modal>
       <Burger ingredients={ingredients} />
