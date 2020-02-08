@@ -1,10 +1,7 @@
 import React from 'react';
 import BurgerIngredient from './BurgerIngredient/BurgerIngredient';
 import classes from './Burger.module.css';
-import {
-  IngredientType,
-  INGREDIENT_TYPES
-} from '../../components/Burger/BurgerIngredient/BurgerIngredient.d';
+import { IngredientType } from '../../components/Burger/BurgerIngredient/BurgerIngredient.d';
 
 const burger = (props: { ingredients: Map<IngredientType, number> }) => {
   let transformedIngredients = [...props.ingredients]

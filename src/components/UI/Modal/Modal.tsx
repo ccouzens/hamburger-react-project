@@ -1,7 +1,7 @@
 import React, { ReactNode, useMemo } from 'react';
 import classes from './Modal.module.css';
 import Backdrop from '../Backdrop/Backdrop';
-const modal = (props: {
+const Modal = (props: {
   children: ReactNode;
   show: boolean;
   modalClosed: () => void;
@@ -21,7 +21,7 @@ const modal = (props: {
         </div>
       </>
     ),
-    [props.show]
+    [props.show, props.children, props.modalClosed]
   );
 
-export default modal;
+export default Modal;

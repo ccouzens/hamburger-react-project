@@ -3,7 +3,7 @@ import classes from './Layout.module.css';
 import Toolbar from '../Navigation/Toolbar/Toolbar';
 import SideDrawer from '../Navigation/SideDrawer/SideDrawer';
 
-const layout = (props: { children: ReactNode }) => {
+const Layout = (props: { children: ReactNode }) => {
   const [showSideDrawer, setShowSideDrawer] = useState(false);
   const sideDrawerClosedHandler = () => {
     setShowSideDrawer(false);
@@ -22,4 +22,4 @@ const layout = (props: { children: ReactNode }) => {
   );
 };
 
-export default layout;
+export default Layout;

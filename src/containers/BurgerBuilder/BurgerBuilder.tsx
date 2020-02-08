@@ -29,10 +29,10 @@ const calculatePurchasable = (ingredients: IngredientCounts) =>
 
 const calculateDisabledInfo = (ingredients: IngredientCounts) =>
   new Set([
-    ...INGREDIENT_TYPES.filter(type => (ingredients.get(type) || 0) == 0)
+    ...INGREDIENT_TYPES.filter(type => (ingredients.get(type) || 0) === 0)
   ]);
 
-const burgerBuilder = () => {
+const BurgerBuilder = () => {
   const [ingredients, setIngredients] = useState<IngredientCounts>(new Map());
   const [purchasing, setPurchasing] = useState(false);
 
@@ -83,4 +83,4 @@ const burgerBuilder = () => {
   );
 };
 
-export default burgerBuilder;
+export default BurgerBuilder;
