@@ -2,13 +2,12 @@ import React, { useState, FormEvent, FunctionComponent } from "react";
 import axios from "../../../axios";
 
 import "./NewPost.css";
-import { Redirect } from "react-router-dom";
+import { RouteComponentProps } from "react-router-dom";
 
-const NewPost: FunctionComponent = () => {
+const NewPost: FunctionComponent<RouteComponentProps> = props => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("Max");
-  const [submitted, setSubmitted] = useState(false);
 
   const postDataHandler = (event: FormEvent) => {
     event.preventDefault();
@@ -19,13 +18,9 @@ const NewPost: FunctionComponent = () => {
     };
     axios
       .post("/posts", post)
-      .then(() => setSubmitted(true))
+      .then(() => props.history.push("/posts"))
       .catch(console.error);
   };
-
-  if (submitted) {
-    return <Redirect to="/posts" />;
-  }
 
   return (
     <form className="NewPost" onSubmit={postDataHandler}>
