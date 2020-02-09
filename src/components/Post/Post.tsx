@@ -1,12 +1,12 @@
-import React from "react";
+import React, { FunctionComponent } from "react";
 
 import "./Post.css";
 
-const Post = (props: {
+const Post: FunctionComponent<{
   title: string;
   author: string;
   clicked: () => void;
-}) => (
+}> = props => (
   <article className="Post" onClick={props.clicked}>
     <h1>{props.title}</h1>
     <div className="Info">

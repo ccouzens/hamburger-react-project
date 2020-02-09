@@ -1,65 +1,28 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import axiosInstance from "../../axios";
+import React, { FunctionComponent } from "react";
 
-import Post from "../../components/Post/Post";
-import FullPost from "../../components/FullPost/FullPost";
-import NewPost from "../../components/NewPost/NewPost";
 import "./Blog.css";
 
-interface Post {
-  id: number;
-  title: string;
-  author: string;
-}
+import Posts from "./Posts/Posts";
+import { Route, Link } from "react-router-dom";
+import NewPost from "./NewPost/NewPost";
 
-const Blog = (props: {}) => {
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [errored, setErrored] = useState(false);
-  const [selectedPostId, setSelectedPostId] = useState<number | undefined>();
-
-  useEffect(() => {
-    const canceller = axios.CancelToken.source();
-    axiosInstance
-      .get<{ id: number; title: string }[]>("/posts", {
-        cancelToken: canceller.token
-      })
-      .then(r => {
-        const posts = r.data
-          .slice(0, 4)
-          .map(post => ({ ...post, author: "Max" }));
-        setPosts(posts);
-      })
-      .catch(err => {
-        setErrored(true);
-        console.error(err);
-      });
-    return function cleanup() {
-      canceller.cancel("cancel loading posts");
-    };
-  }, []);
+const Blog: FunctionComponent = () => {
   return (
-    <div>
-      <section className="Posts">
-        {errored ? (
-          <p style={{ textAlign: "center" }}>Something went wrong!</p>
-        ) : (
-          posts.map(post => (
-            <Post
-              key={post.id}
-              title={post.title}
-              author={post.author}
-              clicked={() => setSelectedPostId(post.id)}
-            />
-          ))
-        )}
-      </section>
-      <section>
-        <FullPost id={selectedPostId} />
-      </section>
-      <section>
-        <NewPost />
-      </section>
+    <div className="Blog">
+      <header>
+        <nav>
+          <ul>
+            <li>
+              <Link to="/">Home</Link>
+            </li>
+            <li>
+              <Link to="/posts/new">New Post</Link>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <Route path="/" exact component={Posts} />
+      <Route path="/posts/new" exact component={NewPost} />
     </div>
   );
 };
