@@ -15,7 +15,7 @@ const Blog: FunctionComponent = () => {
           <ul>
             <li>
               <NavLink to="/" exact>
-                Home
+                Posts
               </NavLink>
             </li>
             <li>

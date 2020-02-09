@@ -5,7 +5,6 @@ import axiosInstance from "../../../axios";
 import Post from "../../../components/Post/Post";
 
 import "./Posts.css";
-import { Link } from "react-router-dom";
 
 interface PostType {
   id: number;
@@ -44,9 +43,12 @@ const Posts: FunctionComponent = () => {
         <p style={{ textAlign: "center" }}>Something went wrong!</p>
       ) : (
         posts.map(post => (
-          <Link to={`/posts/${post.id}`} key={post.id}>
-            <Post title={post.title} author={post.author} />
-          </Link>
+          <Post
+            title={post.title}
+            author={post.author}
+            key={post.id}
+            id={post.id}
+          />
         ))
       )}
     </section>
