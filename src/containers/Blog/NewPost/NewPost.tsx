@@ -25,20 +25,26 @@ const NewPost: FunctionComponent<RouteComponentProps> = props => {
   return (
     <form className="NewPost" onSubmit={postDataHandler}>
       <h1>Add a Post</h1>
-      <label>Title</label>
+      <label htmlFor="new-post-title">Title</label>
       <input
+        id="new-post-title"
         type="text"
         value={title}
         onChange={event => setTitle(event.target.value)}
       />
-      <label>Content</label>
+      <label htmlFor="new-post-content">Content</label>
       <textarea
+        id="new-post-content"
         rows={4}
         value={content}
         onChange={event => setContent(event.target.value)}
       />
-      <label>Author</label>
-      <select value={author} onChange={event => setAuthor(event.target.value)}>
+      <label htmlFor="new-post-author">Author</label>
+      <select
+        value={author}
+        onChange={event => setAuthor(event.target.value)}
+        id="new-post-author"
+      >
         <option value="Max">Max</option>
         <option value="Manu">Manu</option>
       </select>
