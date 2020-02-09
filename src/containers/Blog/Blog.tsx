@@ -1,10 +1,10 @@
-import React, { FunctionComponent } from "react";
+import React, { FunctionComponent, lazy, Suspense } from "react";
 
 import "./Blog.css";
 
 import Posts from "./Posts/Posts";
 import { Route, NavLink, Switch, Redirect } from "react-router-dom";
-import NewPost from "./NewPost/NewPost";
+const NewPost = lazy(() => import("./NewPost/NewPost"));
 
 const Blog: FunctionComponent = () => {
   return (
@@ -26,7 +26,15 @@ const Blog: FunctionComponent = () => {
         </nav>
       </header>
       <Switch>
-        <Route path="/posts/new" exact component={NewPost} />
+        <Route
+          path="/posts/new"
+          exact
+          render={props => (
+            <Suspense fallback={<div>Loading…</div>}>
+              <NewPost {...props} />
+            </Suspense>
+          )}
+        />
         <Route path="/posts" component={Posts} />
         <Redirect from="/" to="/posts" />
       </Switch>
