@@ -1,9 +1,9 @@
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, FunctionComponent } from "react";
 import axios from "../../../axios";
 
 import "./NewPost.css";
 
-const NewPost = (props: {}) => {
+const NewPost: FunctionComponent = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [author, setAuthor] = useState("Max");

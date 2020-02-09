@@ -3,7 +3,7 @@ import React, { FunctionComponent } from "react";
 import "./Blog.css";
 
 import Posts from "./Posts/Posts";
-import { Route, Link } from "react-router-dom";
+import { Route, NavLink } from "react-router-dom";
 import NewPost from "./NewPost/NewPost";
 
 const Blog: FunctionComponent = () => {
@@ -13,10 +13,14 @@ const Blog: FunctionComponent = () => {
         <nav>
           <ul>
             <li>
-              <Link to="/">Home</Link>
+              <NavLink to="/" exact>
+                Home
+              </NavLink>
             </li>
             <li>
-              <Link to="/posts/new">New Post</Link>
+              <NavLink to="/posts/new" exact>
+                New Post
+              </NavLink>
             </li>
           </ul>
         </nav>
