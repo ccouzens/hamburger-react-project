@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, FunctionComponent } from "react";
 import axios from "axios";
 import axiosInstance from "../../../axios";
 
 import "./FullPost.css";
+import { RouteComponentProps } from "react-router-dom";
 
 const deletePostHandler = (id: number) => {
   axiosInstance
@@ -11,30 +12,29 @@ const deletePostHandler = (id: number) => {
     .catch(console.error);
 };
 
-const FullPost = (props: { id: number | undefined }) => {
+const FullPost: FunctionComponent<RouteComponentProps<{
+  id: string;
+}>> = props => {
   const [post, setPost] = useState<
     undefined | { title: string; body: string; id: number }
   >();
 
   useEffect(() => {
-    if (props.id === undefined) {
-      return;
-    }
     const canceller = axios.CancelToken.source();
     axiosInstance
-      .get<{ body: string; title: string; id: number }>(`/posts/${props.id}`, {
-        cancelToken: canceller.token
-      })
+      .get<{ body: string; title: string; id: number }>(
+        `/posts/${encodeURIComponent(props.match.params.id)}`,
+        {
+          cancelToken: canceller.token
+        }
+      )
       .then(r => setPost(r.data))
       .catch(console.error);
     return function cleanup() {
       canceller.cancel("cancel loading post");
     };
-  }, [props.id]);
+  }, [props.match.params.id]);
 
-  if (props.id === undefined) {
-    return <p style={{ textAlign: "center" }}>Please select a Post!</p>;
-  }
   if (post === undefined) {
     return <p style={{ textAlign: "center" }}>Loading…</p>;
   }

@@ -5,6 +5,7 @@ import axiosInstance from "../../../axios";
 import Post from "../../../components/Post/Post";
 
 import "./Posts.css";
+import { Link } from "react-router-dom";
 
 interface PostType {
   id: number;
@@ -15,7 +16,6 @@ interface PostType {
 const Posts: FunctionComponent = () => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [errored, setErrored] = useState(false);
-  const [selectedPostId, setSelectedPostId] = useState<number | undefined>();
 
   useEffect(() => {
     const canceller = axios.CancelToken.source();
@@ -44,12 +44,9 @@ const Posts: FunctionComponent = () => {
         <p style={{ textAlign: "center" }}>Something went wrong!</p>
       ) : (
         posts.map(post => (
-          <Post
-            key={post.id}
-            title={post.title}
-            author={post.author}
-            clicked={() => setSelectedPostId(post.id)}
-          />
+          <Link to={`/posts/${post.id}`} key={post.id}>
+            <Post title={post.title} author={post.author} />
+          </Link>
         ))
       )}
     </section>
