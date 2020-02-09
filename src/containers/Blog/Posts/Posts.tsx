@@ -5,6 +5,8 @@ import axiosInstance from "../../../axios";
 import Post from "../../../components/Post/Post";
 
 import "./Posts.css";
+import { Route, RouteComponentProps } from "react-router-dom";
+import FullPost from "../FullPost/FullPost";
 
 interface PostType {
   id: number;
@@ -12,7 +14,7 @@ interface PostType {
   author: string;
 }
 
-const Posts: FunctionComponent = () => {
+const Posts: FunctionComponent<RouteComponentProps> = props => {
   const [posts, setPosts] = useState<PostType[]>([]);
   const [errored, setErrored] = useState(false);
 
@@ -38,20 +40,23 @@ const Posts: FunctionComponent = () => {
   }, []);
 
   return (
-    <section className="Posts">
-      {errored ? (
-        <p style={{ textAlign: "center" }}>Something went wrong!</p>
-      ) : (
-        posts.map(post => (
-          <Post
-            title={post.title}
-            author={post.author}
-            key={post.id}
-            id={post.id}
-          />
-        ))
-      )}
-    </section>
+    <div>
+      <section className="Posts">
+        {errored ? (
+          <p style={{ textAlign: "center" }}>Something went wrong!</p>
+        ) : (
+          posts.map(post => (
+            <Post
+              title={post.title}
+              author={post.author}
+              key={post.id}
+              id={post.id}
+            />
+          ))
+        )}
+      </section>
+      <Route path={`${props.match.path}/:id`} exact component={FullPost} />
+    </div>
   );
 };
 

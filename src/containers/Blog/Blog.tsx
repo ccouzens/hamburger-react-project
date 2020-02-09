@@ -5,7 +5,6 @@ import "./Blog.css";
 import Posts from "./Posts/Posts";
 import { Route, NavLink, Switch } from "react-router-dom";
 import NewPost from "./NewPost/NewPost";
-import FullPost from "./FullPost/FullPost";
 
 const Blog: FunctionComponent = () => {
   return (
@@ -14,7 +13,7 @@ const Blog: FunctionComponent = () => {
         <nav>
           <ul>
             <li>
-              <NavLink to="/" exact>
+              <NavLink to="/posts" exact>
                 Posts
               </NavLink>
             </li>
@@ -27,9 +26,8 @@ const Blog: FunctionComponent = () => {
         </nav>
       </header>
       <Switch>
-        <Route path="/" exact component={Posts} />
         <Route path="/posts/new" exact component={NewPost} />
-        <Route path="/posts/:id" exact component={FullPost} />
+        <Route path="/posts" component={Posts} />
       </Switch>
     </div>
   );
